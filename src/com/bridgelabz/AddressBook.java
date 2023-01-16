@@ -21,7 +21,7 @@ public class AddressBook {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			System.out.println("Drivers loaded!!");
 			connection = DriverManager.getConnection(
-					"jdbc:mysql://localhost:3306/ addressbookservice |?allowPublicKeyRetrieval=true&useSSL=false",
+					"jdbc:mysql://localhost:3306/addressbookservice?allowPublicKeyRetrieval=true&useSSL=false",
 					"root", "Root");
 			System.out.println("connection Established!!");
 		} catch (ClassNotFoundException | SQLException e) {
@@ -35,11 +35,11 @@ public class AddressBook {
 		List<ContactPerson> addressBookList = new ArrayList<ContactPerson>();
 		try (Connection connection = getConnection()) {
 			Statement statement = connection.createStatement();
-			resultSet = statement.executeQuery("select * from  addressbook;");
+			resultSet = statement.executeQuery("select * from addressbook;");
 			int count = 0;
 			while (resultSet.next()) {
 				ContactPerson contactInfo = new ContactPerson();
-				contactInfo.setBookName(resultSet.getString("firstName"));
+				contactInfo.setFirstName(resultSet.getString("firstName"));
 				contactInfo.setLastName(resultSet.getString("lastname"));
 				contactInfo.setAddress(resultSet.getString("address"));
 				contactInfo.setCity(resultSet.getString("city"));
@@ -58,7 +58,20 @@ public class AddressBook {
 		return addressBookList;
 
 	}
-	
-	
+
+	public void updateCityByZip(String address, String city, String state, int zip, int id) {
+		try (Connection connection = getConnection()) {
+			Statement statement = connection.createStatement();
+			String query = "Update Address_book_database set address=" + "'" + address + "'" + ", " + "city=" + "'"
+					+ city + "'" + ", " + "state=" + "'" + state + "'" + ", " + "zip=" + zip + " where id=" + id + ";";
+			int result = statement.executeUpdate(query);
+			System.out.println(result);
+			if (result > 0) {
+				System.out.println("Address Updated Successfully");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 }
 
