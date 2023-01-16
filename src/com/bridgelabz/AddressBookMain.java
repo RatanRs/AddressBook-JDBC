@@ -11,27 +11,51 @@ public class AddressBookMain {
 	static Scanner scanner = new Scanner(System.in);
 
 	public static void main(String[] args) {
-
-		boolean exit = false;
-		while (!exit) {
-			System.out.println(" Press\n 1 ->  Retrieve data\n 2 -> Update Address,city,state,zip  by srNo\n "
-					+ "3 Retrieve data for particular date" + "-> \n 4 -> exit");
-			int choice = scanner.nextInt();
-			switch (choice) {
-			case 1:
-				retrieveData();
-				break;
-			case 2:
-				update();
-				break;
-			case 3:
-				reteriveDataForParticularDate();
-				break;
-			case 4:
-				exit = true;
-			}
-		}
+		 boolean exit = false;
+	        while (!exit) {
+	            System.out.println(" Press\n 1 ->  Retrieve data\n 2 -> Update Address,city,state,zip  by srNo\n " +
+	                    "3 -> Retrieve data for particular date\n" +
+	                    "4 -> Retrieve Count of Contacts for City or State\n" +
+	                    "5 -> exit");
+	            int choice = scanner.nextInt();
+	            switch (choice) {
+	                case 1:
+	                    retrieveData();
+	                    break;
+	                case 2:
+	                    update();
+	                    break;
+	                case 3:
+	                	reteriveDataForParticularDate();
+	                    break;
+	                case 4:
+	                    retrieveCountByCityOrState();
+	                case 5:
+	                    exit = true;
+	            }
+	        }
 	}
+
+	private static void retrieveCountByCityOrState() {
+        AddressBook addressBookRepo = new AddressBook();
+        System.out.println("Enter 1 -> Contacts count by City\n" +
+                "2 -> Contacts count by State");
+
+        switch (scanner.nextInt()) {
+            case 1:
+                System.out.println("Enter city Name");
+                int cityContactsCount = addressBookRepo.countByCity(scanner.next());
+                System.out.println("Number of Contacts is Given city= " + cityContactsCount);
+                break;
+            case 2:
+                System.out.println("Enter state name");
+                int stateContactsCount=  addressBookRepo.countByState(scanner.next());
+                System.out.println("Number of Contacts is Given state= " + stateContactsCount);
+                break;
+        }
+
+
+    }
 
 	private static void retrieveData() {
 		AddressBook addressBookRepo = new AddressBook();
