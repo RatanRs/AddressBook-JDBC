@@ -21,8 +21,8 @@ public class AddressBook {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			System.out.println("Drivers loaded!!");
 			connection = DriverManager.getConnection(
-					"jdbc:mysql://localhost:3306/addressbookservice?allowPublicKeyRetrieval=true&useSSL=false",
-					"root", "Root");
+					"jdbc:mysql://localhost:3306/address_book_services?allowPublicKeyRetrieval=true&useSSL=false",
+					"root", "root");
 			System.out.println("connection Established!!");
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
@@ -35,7 +35,7 @@ public class AddressBook {
 		List<ContactPerson> addressBookList = new ArrayList<ContactPerson>();
 		try (Connection connection = getConnection()) {
 			Statement statement = connection.createStatement();
-			resultSet = statement.executeQuery("select * from addressbook;");
+			resultSet = statement.executeQuery("select * from Address_book_database;");
 			int count = 0;
 			while (resultSet.next()) {
 				ContactPerson contactInfo = new ContactPerson();
@@ -59,7 +59,32 @@ public class AddressBook {
 
 	}
 	
-	
+	 public static void insertData(ContactPerson add) throws SQLException {
+	        Connection connection = getConnection();
+	        try {
+	            if (connection != null) {
+	                connection.setAutoCommit(false);
+	                Statement statement = connection.createStatement();
+	                String sql = "insert into Address_book_database(firstname,lastname,address,city,state,zip,PhoneNumber,email,bookname,dateadded)" +
+	                        "values('" + add.getFirstName() + "','" + add.getLastName() + "','" + add.getAddress() + "','" + add.getCity() +
+	                        "','" + add.getState() + "','" + add.getZip() + "','" + add.getPhoneNumber() + "','" +
+	                        add.getEmailId() + "','" + add.getBookName() + "','" + add.getDateAdded() + "');";
+	                int result = statement.executeUpdate(sql);
+	                connection.commit();
+	                if (result > 0) {
+	                    System.out.println("Contact Inserted");
+	                }
+	                connection.setAutoCommit(true);
+	            }
+	        } catch (SQLException sqlException) {
+	            System.out.println("Insertion Rollbacked");
+	            connection.rollback();
+	        } finally {
+	            if (connection != null) {
+	                connection.close();
+	            }
+	        }
+	    }
 	
 	public void updateCityByZip(String address, String city, String state, int zip, int id) {
         try (Connection connection = getConnection()) {

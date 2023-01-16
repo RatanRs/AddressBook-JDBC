@@ -1,4 +1,5 @@
 package com.bridgelabz;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
@@ -10,13 +11,14 @@ import java.util.Scanner;
 public class AddressBookMain {
 	static Scanner scanner = new Scanner(System.in);
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws SQLException {
 		 boolean exit = false;
 	        while (!exit) {
 	            System.out.println(" Press\n 1 ->  Retrieve data\n 2 -> Update Address,city,state,zip  by srNo\n " +
 	                    "3 -> Retrieve data for particular date\n" +
-	                    "4 -> Retrieve Count of Contacts for City or State\n" +
-	                    "5 -> exit");
+	                    " 4 -> Retrieve Count of Contacts for City or State\n" +
+	                    " 5 -> Add new Contacts to AddressBook\n" +
+	                    " 6 -> exit");
 	            int choice = scanner.nextInt();
 	            switch (choice) {
 	                case 1:
@@ -31,11 +33,13 @@ public class AddressBookMain {
 	                case 4:
 	                    retrieveCountByCityOrState();
 	                case 5:
+	                	addNewContact();
+	                    break;
+	                case 6:
 	                    exit = true;
 	            }
 	        }
-	}
-
+}
 	private static void retrieveCountByCityOrState() {
         AddressBook addressBookRepo = new AddressBook();
         System.out.println("Enter 1 -> Contacts count by City\n" +
@@ -81,4 +85,30 @@ public class AddressBookMain {
             System.out.println(employee + "\n");
         }
     }
+	  private static void addNewContact() throws SQLException {
+		  ContactPerson Object = new ContactPerson();
+	        System.out.println("Enter First Name:");
+	        Object.setFirstName(scanner.next());
+	        System.out.println("Enter Last name:");
+	        Object.setLastName(scanner.next());
+	        System.out.println("Enter address");
+	        Object.setAddress(scanner.next());
+	        System.out.println("Enter city");
+	        Object.setCity(scanner.next());
+	        System.out.println("Enter state");
+	        Object.setState(scanner.next());
+	        System.out.println("Enter Zip");
+	        Object.setZip(scanner.nextInt());
+	        System.out.println("Enter PhoneNumber");
+	        Object.setPhoneNumber(scanner.next());
+	        System.out.println("Enter Email");
+	        Object.setEmailId(scanner.next());
+	        System.out.println("Enter Addressbook name");
+	        Object.setBookName(scanner.next());
+	        System.out.println("Enter date");
+	        Object.setDateAdded(LocalDate.now());
+	        AddressBook.insertData(Object);
+
+	    }
+
 }
